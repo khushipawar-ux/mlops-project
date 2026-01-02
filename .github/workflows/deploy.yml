@@ -1,0 +1,25 @@
+name: Deploy API
+
+on:
+  workflow_run:
+    workflows: ["Train Pipeline"]
+    types:
+      - completed
+  push:
+    branches:
+      - main
+    paths:
+      - 'api/**'
+      - 'Dockerfile'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t wine-quality-api:latest .
+          # In a real scenario, push to a container registry
+          # docker push user/wine-quality-api:latest

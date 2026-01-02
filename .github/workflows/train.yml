@@ -1,0 +1,32 @@
+name: Train Pipeline
+
+on:
+  push:
+    paths:
+      - 'pipelines/**'
+      - 'data/**'
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Run Pipeline
+        run: |
+          python pipelines/ingest.py
+          python pipelines/validate.py
+          python pipelines/transform.py
+          python pipelines/train.py
+      - name: Archive Model
+        uses: actions/upload-artifact@v3
+        with:
+          name: wine-quality-model
+          path: models/wine_quality_rf.joblib
