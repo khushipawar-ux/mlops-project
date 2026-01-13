@@ -1,0 +1,43 @@
+> $env:PYTHONPATH="."; pytest tests/test_pipeline.py
+=========================================================== test session starts =========================================================
+platform win32 -- Python 3.13.9, pytest-8.4.2, pluggy-1.5.0
+rootdir: D:\KOFFICE\Projects\Practice\mlops-project
+plugins: anyio-4.10.0, Faker-40.1.0, langsmith-0.6.2, asyncio-1.3.0, cov-7.0.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 3 items                                                                                                                                                               
+
+tests\test_pipeline.py ...                                                                                                                                                [100%]
+
+=========================================================== 3 passed in 1.81s ============================================================
+> cd 'd:\KOFFICE\Projects\Practice\mlops-project'
+> python pipelines/ingest.py
+Ingesting data from https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv...
+Data saved to data/raw/winequality-red.csv
+> cd 'd:\KOFFICE\Projects\Practice\mlops-project'
+> python pipelines/validate.py
+Data validation successful.
+> cd 'd:\KOFFICE\Projects\Practice\mlops-project'
+> python pipelines/transform.py
+Transformed data saved to data/processed
+> cd 'd:\KOFFICE\Projects\Practice\mlops-project'
+> python pipelines/train.py
+2026/01/13 13:10:13 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2026/01/13 13:10:13 INFO mlflow.store.db.utils: Updating database tables
+2026/01/13 13:10:13 INFO alembic.runtime.migration: Context impl SQLiteImpl.
+2026/01/13 13:10:13 INFO alembic.runtime.migration: Will assume non-transactional DDL.
+Random Forest model (n_estimators=100, max_depth=10):
+  RMSE: 0.5640812056057951
+  MAE: 0.4447183253946186
+  R2: 0.5131067274255267
+2026/01/13 13:10:15 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+2026/01/13 13:10:24 INFO mlflow.store.db.utils: Creating initial MLflow database tables...
+2026/01/13 13:10:24 INFO mlflow.store.db.utils: Updating database tables
+2026/01/13 13:10:24 INFO alembic.runtime.migration: Context impl SQLiteImpl.
+2026/01/13 13:10:24 INFO alembic.runtime.migration: Will assume non-transactional DDL.
+Registered model 'WineQualityModelV2' already exists. Creating a new version of this model...
+Created version '3' of model 'WineQualityModelV2'.
+Model saved locally to models/wine_quality_rf.joblib
+> cd 'd:\KOFFICE\Projects\Practice\mlops-project'
+> python monitoring/data_drift.py
+Data drift report generated at monitoring/data_drift_report.html
+> 
